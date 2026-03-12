@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Halaman Utama - Lab 2</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; margin-top: 50px; background-color: #f0f2f5; }
+        .card { background: white; padding: 30px; display: inline-block; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #1a73e8; }
+        
+        /* Gaya untuk Menu Navigasi */
+        nav { margin-top: 20px; }
+        .nav-link {
+            text-decoration: none;
+            color: white;
+            background-color: #1a73e8;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 0 10px;
+            transition: background 0.3s;
+        }
+        .nav-link:hover { background-color: #1557b0; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Selamat Datang di Kota Bandar Lampung</h1>
+        <p>Halo, ini adalah halaman utama project Django saya.</p>
+        
+        <hr>
+        
+        <h3>Pilih Menu:</h3>
+        <nav>
+            <a href="/about/" class="nav-link">Tentang Saya (About)</a>
+            <a href="/contacts/" class="nav-link">Hubungi Saya (Contacts)</a>
+        </nav>
+    </div>
+</body>
+</html>
