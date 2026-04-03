@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Konfirmasi Hapus - Smart City</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; margin-top: 100px; background-color: #f0f2f5; }
+        .card { 
+            background: white; 
+            padding: 40px; 
+            display: inline-block; 
+            border-radius: 15px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            max-width: 500px; 
+        }
+        h1 { color: #d93025; } /* Warna merah untuk peringatan */
+        p { color: #5f6368; font-size: 1.1em; }
+        .btn-group { margin-top: 30px; }
+        .btn {
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 0 10px;
+        }
+        .btn-danger { background-color: #d93025; color: white; }
+        .btn-danger:hover { background-color: #b3261e; }
+        .btn-secondary { background-color: #dadce0; color: #3c4043; }
+        .btn-secondary:hover { background-color: #bdc1c6; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>⚠ Konfirmasi Hapus</h1>
+        <p>Apakah Anda yakin ingin menghapus laporan berikut?</p>
+        <p><strong>"{{ report.title }}"</strong></p>
+        
+        <form method="POST" class="btn-group">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Ya, Hapus Permanen</button>
+            <a href="{% url 'home' %}" class="btn btn-secondary">Batal</a>
+        </form>
+    </div>
+</body>
+</html>

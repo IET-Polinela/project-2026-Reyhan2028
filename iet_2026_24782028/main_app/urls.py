@@ -1,6 +1,9 @@
 from django.urls import path
-from . import views # Di sini baru benar pakai 'from . import views' karena file views.py ada di folder yang sama [cite: 19]
+from . import views
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('add/', views.add_report, name='add_report'),
+    path('update/<int:pk>/', views.update_report, name='update_report'),
+    path('delete/<int:pk>/', views.delete_report, name='delete_report'),
 ]

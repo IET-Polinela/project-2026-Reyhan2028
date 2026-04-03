@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Tambah Laporan - Smart City</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; margin-top: 50px; background-color: #f0f2f5; }
+        .card { 
+            background: white; padding: 30px; display: inline-block; 
+            border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            text-align: left; width: 450px; 
+        }
+        h1 { color: #1a73e8; text-align: center; margin-bottom: 20px; }
+        form p { margin-bottom: 15px; }
+        
+        /* Gaya Input Form */
+        input, textarea, select { 
+            width: 100%; padding: 10px; margin-top: 5px; 
+            border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;
+        }
+        label { font-weight: bold; color: #5f6368; }
+
+        .btn-submit { 
+            background-color: #34a853; color: white; border: none; 
+            padding: 12px; width: 100%; border-radius: 5px; 
+            cursor: pointer; font-weight: bold; font-size: 1em; margin-top: 20px;
+            transition: background 0.3s;
+        }
+        .btn-submit:hover { background-color: #2d8e47; }
+        .back-link { display: block; text-align: center; margin-top: 15px; text-decoration: none; color: #1a73e8; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>{% if edit_mode %}Edit Laporan{% else %}Buat Laporan Baru{% endif %}</h1>
+        
+        <form method="POST">
+            {% csrf_token %} {{ form.as_p }}
+            
+            <button type="submit" class="btn-submit">
+                {% if edit_mode %}Simpan Perubahan{% else %}Kirim Laporan Sekarang{% endif %}
+            </button>
+        </form>
+
+        <a href="{% url 'home' %}" class="back-link">← Kembali ke Daftar</a>
+    </div>
+</body>
+</html>

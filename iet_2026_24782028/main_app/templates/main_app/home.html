@@ -2,38 +2,73 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Halaman Utama - Lab 2</title>
+    <title>Smart City Bandar Lampung - Daftar Laporan</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; text-align: center; margin-top: 50px; background-color: #f0f2f5; }
-        .card { background: white; padding: 30px; display: inline-block; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .card { background: white; padding: 30px; display: inline-block; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 80%; }
         h1 { color: #1a73e8; }
         
-        /* Gaya untuk Menu Navigasi */
-        nav { margin-top: 20px; }
+        /* Menu Navigasi */
+        nav { margin-bottom: 20px; }
         .nav-link {
-            text-decoration: none;
-            color: white;
-            background-color: #1a73e8;
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin: 0 10px;
-            transition: background 0.3s;
+            text-decoration: none; color: white; background-color: #1a73e8;
+            padding: 10px 20px; border-radius: 5px; margin: 0 5px; transition: background 0.3s;
         }
         .nav-link:hover { background-color: #1557b0; }
+        .btn-add { background-color: #34a853; } /* Hijau untuk tambah */
+        .btn-add:hover { background-color: #2d8e47; }
+
+        /* Gaya Tabel Laporan */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; text-align: left; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; color: #5f6368; }
+        .status-badge { padding: 5px 10px; border-radius: 15px; font-size: 0.8em; font-weight: bold; }
+        .status-reported { background: #feefc3; color: #b06000; } /* Kuning */
     </style>
 </head>
 <body>
     <div class="card">
-        <h1>Selamat Datang di Kota Bandar Lampung</h1>
-        <p>Halo, ini adalah halaman utama project Django saya.</p>
+        <h1>Smart City Bandar Lampung</h1>
+        <p>Layanan Pengaduan Masalah Fasilitas Kota</p>
         
-        <hr>
-        
-        <h3>Pilih Menu:</h3>
         <nav>
-            <a href="/about/" class="nav-link">Tentang Saya (About)</a>
-            <a href="/contacts/" class="nav-link">Hubungi Saya (Contacts)</a>
+            <a href="/about/" class="nav-link">Tentang Saya</a>
+            <a href="/contacts/" class="nav-link">Hubungi Kami</a>
+            <a href="{% url 'add_report' %}" class="nav-link btn-add">+ Buat Laporan Baru</a>
         </nav>
+
+        <hr>
+
+        <h3>Daftar Laporan Terkini:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Judul Masalah</th>
+                    <th>Kategori</th>
+                    <th>Lokasi</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in reports %}
+                <tr>
+                    <td><strong>{{ report.title }}</strong></td>
+                    <td>{{ report.category }}</td>
+                    <td>{{ report.location }}</td>
+                    <td><span class="status-badge status-reported">{{ report.status }}</span></td>
+                    <td>
+                        <a href="{% url 'update_report' report.pk %}">Edit</a> | 
+                        <a href="{% url 'delete_report' report.pk %}" style="color: red;">Hapus</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align: center;">Belum ada laporan yang masuk.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </body>
 </html>
