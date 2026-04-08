@@ -5,7 +5,7 @@
     <title>Smart City Bandar Lampung - Daftar Laporan</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; text-align: center; margin-top: 50px; background-color: #f0f2f5; }
-        .card { background: white; padding: 30px; display: inline-block; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 80%; }
+        .card { background: white; padding: 30px; display: inline-block; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 85%; }
         h1 { color: #1a73e8; }
         
         /* Menu Navigasi */
@@ -15,15 +15,30 @@
             padding: 10px 20px; border-radius: 5px; margin: 0 5px; transition: background 0.3s;
         }
         .nav-link:hover { background-color: #1557b0; }
-        .btn-add { background-color: #34a853; } /* Hijau untuk tambah */
+        .btn-add { background-color: #34a853; }
         .btn-add:hover { background-color: #2d8e47; }
 
         /* Gaya Tabel Laporan */
         table { width: 100%; border-collapse: collapse; margin-top: 20px; text-align: left; }
-        th, td { padding: 12px; border-bottom: 1px solid #ddd; }
-        th { background-color: #f8f9fa; color: #5f6368; }
-        .status-badge { padding: 5px 10px; border-radius: 15px; font-size: 0.8em; font-weight: bold; }
-        .status-reported { background: #feefc3; color: #b06000; } /* Kuning */
+        th, td { padding: 15px; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; color: #5f6368; text-transform: uppercase; font-size: 0.85em; }
+        
+        /* Badge Status Dinamis */
+        .status-badge { padding: 6px 12px; border-radius: 15px; font-size: 0.8em; font-weight: bold; display: inline-block; }
+        .status-reported { background: #feefc3; color: #b06000; }
+        .status-verified { background: #e8f0fe; color: #1967d2; }
+        .status-progress { background: #fef7e0; color: #ea8600; }
+        .status-resolved { background: #e6f4ea; color: #137333; }
+
+        /* Tombol Workflow */
+        .btn-workflow {
+            border: none; padding: 6px 15px; border-radius: 5px; cursor: pointer; 
+            font-size: 0.8em; font-weight: bold; color: white; transition: 0.3s;
+        }
+        .btn-workflow:hover { opacity: 0.8; transform: translateY(-1px); }
+        .bg-blue { background-color: #1a73e8; }
+        .bg-yellow { background-color: #fbbc04; color: black; }
+        .bg-green { background-color: #34a853; }
     </style>
 </head>
 <body>
@@ -47,24 +62,50 @@
                     <th>Kategori</th>
                     <th>Lokasi</th>
                     <th>Status</th>
+                    <th>Workflow Action</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 {% for report in reports %}
                 <tr>
-                    <td><strong>{{ report.title }}</strong></td>
+                    <td><strong><a href="{% url 'report_detail' report.pk %}" style="text-decoration: none; color: #1a73e8;">{{ report.title }}</a></strong></td>
                     <td>{{ report.category }}</td>
                     <td>{{ report.location }}</td>
-                    <td><span class="status-badge status-reported">{{ report.status }}</span></td>
                     <td>
-                        <a href="{% url 'update_report' report.pk %}">Edit</a> | 
-                        <a href="{% url 'delete_report' report.pk %}" style="color: red;">Hapus</a>
+                        <span class="status-badge 
+                            {% if report.status == 'REPORTED' %}status-reported
+                            {% elif report.status == 'VERIFIED' %}status-verified
+                            {% elif report.status == 'IN_PROGRESS' %}status-progress
+                            {% elif report.status == 'RESOLVED' %}status-resolved{% endif %}">
+                            {{ report.get_status_display }}
+                        </span>
+                    </td>
+                    <td>
+                        <form action="{% url 'update_status' report.pk %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            {% if report.status == 'REPORTED' %}
+                                <input type="hidden" name="status" value="VERIFIED">
+                                <button type="submit" class="btn-workflow bg-blue">Verify</button>
+                            {% elif report.status == 'VERIFIED' %}
+                                <input type="hidden" name="status" value="IN_PROGRESS">
+                                <button type="submit" class="btn-workflow bg-yellow">Start Progress</button>
+                            {% elif report.status == 'IN_PROGRESS' %}
+                                <input type="hidden" name="status" value="RESOLVED">
+                                <button type="submit" class="btn-workflow bg-green">Resolve</button>
+                            {% else %}
+                                <span style="color: #34a853; font-weight: bold; font-size: 0.9em;">✓ Selesai</span>
+                            {% endif %}
+                        </form>
+                    </td>
+                    <td>
+                        <a href="{% url 'update_report' report.pk %}" style="text-decoration: none; color: #5f6368;">Edit</a> | 
+                        <a href="{% url 'delete_report' report.pk %}" style="color: red; text-decoration: none;">Hapus</a>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" style="text-align: center;">Belum ada laporan yang masuk.</td>
+                    <td colspan="6" style="text-align: center; padding: 30px;">Belum ada laporan yang masuk.</td>
                 </tr>
                 {% endfor %}
             </tbody>
