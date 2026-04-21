@@ -1,46 +1,103 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Detail Laporan - Smart City</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; margin-top: 50px; background-color: #f0f2f5; display: flex; justify-content: center; }
-        .card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 600px; }
-        h1 { color: #1a73e8; margin-bottom: 10px; }
-        .info-group { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .label { font-weight: bold; color: #5f6368; display: block; font-size: 0.9em; }
-        .value { font-size: 1.1em; color: #202124; }
-        .back-link { display: inline-block; margin-top: 20px; text-decoration: none; color: #1a73e8; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h1>Detail Laporan</h1>
-        <p>Informasi lengkap mengenai keluhan warga.</p>
-        <hr>
+{% extends 'base.html' %}
 
-        <div class="info-group">
-            <span class="label">Judul Masalah</span>
-            <span class="value">{{ object.title }}</span>
-        </div>
-        <div class="info-group">
-            <span class="label">Kategori</span>
-            <span class="value">{{ object.category }}</span>
-        </div>
-        <div class="info-group">
-            <span class="label">Lokasi</span>
-            <span class="value">{{ object.location }}</span>
-        </div>
-        <div class="info-group">
-            <span class="label">Deskripsi</span>
-            <span class="value">{{ object.description }}</span>
-        </div>
-        <div class="info-group">
-            <span class="label">Status Saat Ini</span>
-            <span class="value" style="font-weight: bold; color: #1a73e8;">{{ object.get_status_display }}</span>
-        </div>
+{% block title %}Detail Laporan - Smart City{% endblock %}
 
-        <a href="{% url 'home' %}" class="back-link">← Kembali ke Daftar</a>
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb shadow-sm bg-white p-3 rounded-pill">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-muted">Daftar Laporan</a></li>
+                <li class="breadcrumb-item active fw-bold text-primary" aria-current="page">Detail Laporan</li>
+            </ol>
+        </nav>
+
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+            <div class="card-header bg-primary py-3 text-center">
+                <h4 class="mb-0 fw-bold text-white">
+                    <i class="bi bi-file-earmark-text me-2"></i>Detail Laporan #{{ report.id }}
+                </h4>
+            </div>
+            
+            <div class="card-body p-4">
+                <div class="mb-4">
+                    <label class="text-muted small text-uppercase fw-bold">Judul Masalah</label>
+                    <h3 class="fw-bold text-dark">{{ report.title }}</h3>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="text-muted small text-uppercase fw-bold">Kategori</label>
+                        <p class="fs-5"><i class="bi bi-tag me-2 text-primary"></i>{{ report.category }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-muted small text-uppercase fw-bold">Lokasi</label>
+                        <p class="fs-5">
+                            <i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ report.location }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="text-muted small text-uppercase fw-bold">Deskripsi Lengkap</label>
+                    <div class="p-3 bg-light rounded-3 border-start border-primary border-4">
+                        {{ report.description|linebreaks }}
+                    </div>
+                </div>
+
+                <div class="row mb-4 align-items-center">
+                    <div class="col-md-6">
+                        <label class="text-muted small text-uppercase fw-bold">Status Saat Ini</label>
+                        <div>
+                            <span class="badge fs-6 rounded-pill px-3 py-2
+                                {% if report.status == 'REPORTED' %}bg-secondary
+                                {% elif report.status == 'VERIFIED' %}bg-primary
+                                {% elif report.status == 'IN_PROGRESS' %}bg-warning text-dark
+                                {% elif report.status == 'RESOLVED' %}bg-success{% endif %}">
+                                {{ report.get_status_display }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <label class="text-muted small text-uppercase fw-bold d-block">Tanggal Lapor</label>
+                        <p class="mb-0 text-muted">{{ report.created_at|date:"d F Y, H:i" }} WIB</p>
+                    </div>
+                </div>
+
+                <hr class="my-4 opacity-25">
+
+                <div class="d-flex flex-wrap gap-2 justify-content-between">
+                    <a href="{% url 'home' %}" class="btn btn-outline-secondary px-4 rounded-pill">
+                        <i class="bi bi-arrow-left me-1"></i>Kembali
+                    </a>
+
+                    <div class="d-flex gap-2">
+                        {% if report.status != 'RESOLVED' %}
+                        <form action="{% url 'update_status' report.pk %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            {% if report.status == 'REPORTED' %}
+                                <input type="hidden" name="status" value="VERIFIED">
+                                <button type="submit" class="btn btn-primary px-3 rounded-pill shadow-sm">Verifikasi</button>
+                            {% elif report.status == 'VERIFIED' %}
+                                <input type="hidden" name="status" value="IN_PROGRESS">
+                                <button type="submit" class="btn btn-warning px-3 rounded-pill shadow-sm text-dark">Proses</button>
+                            {% elif report.status == 'IN_PROGRESS' %}
+                                <input type="hidden" name="status" value="RESOLVED">
+                                <button type="submit" class="btn btn-success px-3 rounded-pill shadow-sm">Selesaikan</button>
+                            {% endif %}
+                        </form>
+                        {% endif %}
+
+                        <a href="{% url 'update_report' report.pk %}" class="btn btn-info text-white px-3 rounded-pill shadow-sm">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a href="{% url 'delete_report' report.pk %}" class="btn btn-danger px-3 rounded-pill shadow-sm">
+                            <i class="bi bi-trash3"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

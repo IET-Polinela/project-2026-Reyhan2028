@@ -1,48 +1,127 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Tambah Laporan - Smart City</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; text-align: center; margin-top: 50px; background-color: #f0f2f5; }
-        .card { 
-            background: white; padding: 30px; display: inline-block; 
-            border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-            text-align: left; width: 450px; 
-        }
-        h1 { color: #1a73e8; text-align: center; margin-bottom: 20px; }
-        form p { margin-bottom: 15px; }
-        
-        /* Gaya Input Form */
-        input, textarea, select { 
-            width: 100%; padding: 10px; margin-top: 5px; 
-            border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;
-        }
-        label { font-weight: bold; color: #5f6368; }
+{% extends 'base.html' %}
 
-        .btn-submit { 
-            background-color: #34a853; color: white; border: none; 
-            padding: 12px; width: 100%; border-radius: 5px; 
-            cursor: pointer; font-weight: bold; font-size: 1em; margin-top: 20px;
-            transition: background 0.3s;
-        }
-        .btn-submit:hover { background-color: #2d8e47; }
-        .back-link { display: block; text-align: center; margin-top: 15px; text-decoration: none; color: #1a73e8; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h1>{% if edit_mode %}Edit Laporan{% else %}Buat Laporan Baru{% endif %}</h1>
-        
-        <form method="POST">
-            {% csrf_token %} {{ form.as_p }}
+{% block title %}{% if form.instance.pk %}Edit Laporan{% else %}Buat Laporan Baru{% endif %} - Smart City{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
             
-            <button type="submit" class="btn-submit">
-                {% if edit_mode %}Simpan Perubahan{% else %}Kirim Laporan Sekarang{% endif %}
-            </button>
-        </form>
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb shadow-sm bg-white p-3 rounded-pill">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-muted">Daftar Laporan</a></li>
+                    <li class="breadcrumb-item active fw-bold text-primary">
+                        {% if form.instance.pk %}Edit Laporan{% else %}Laporan Baru{% endif %}
+                    </li>
+                </ol>
+            </nav>
 
-        <a href="{% url 'home' %}" class="back-link">← Kembali ke Daftar</a>
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-primary py-4 text-center border-0">
+                    <h3 class="mb-0 fw-bold text-white">
+                        <i class="bi {% if form.instance.pk %}bi-pencil-square{% else %}bi-plus-circle-fill{% endif %} me-2"></i>
+                        {% if form.instance.pk %}Perbarui Laporan{% else %}Sampaikan Laporan{% endif %}
+                    </h3>
+                    <p class="text-white-50 small mb-0 mt-2">Pastikan data yang Anda masukkan sudah benar dan akurat</p>
+                </div>
+                
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <form method="POST" id="reportForm">
+                        {% csrf_token %}
+                        
+                        {% for field in form %}
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold text-secondary mb-2">
+                                    {{ field.label }}
+                                </label>
+                                <div class="input-group">
+                                    {{ field }}
+                                </div>
+                                {% if field.help_text %}
+                                    <div class="form-text small opacity-75">{{ field.help_text }}</div>
+                                {% endif %}
+                                {% if field.errors %}
+                                    {% for error in field.errors %}
+                                        <div class="text-danger small mt-1 fw-bold">
+                                            <i class="bi bi-exclamation-circle me-1"></i>{{ error }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <hr class="my-5 opacity-25">
+
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <button type="submit" id="submitBtn" class="btn btn-lg w-100 shadow-sm fw-bold {% if form.instance.pk %}btn-primary{% else %}btn-success{% endif %}">
+                                    <span id="btnText">
+                                        {% if form.instance.pk %}
+                                            <i class="bi bi-save2-fill me-2"></i>Simpan Perubahan
+                                        {% else %}
+                                            <i class="bi bi-check-circle-fill me-2"></i>Kirim Laporan
+                                        {% endif %}
+                                    </span>
+                                    
+                                    <span id="btnLoader" class="d-none">
+                                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        Memproses...
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-lg w-100 fw-semibold">
+                                    Batal
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <p class="text-muted small">© 2026 Smart City Bandar Lampung - Sistem Pelaporan Fasilitas</p>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+</div>
+
+<style>
+    .form-control, .form-select {
+        border-radius: 10px !important;
+        border: 1px solid #dee2e6;
+        padding: 0.75rem 1rem;
+        transition: all 0.2s ease-in-out;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+    }
+    .btn {
+        border-radius: 12px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        transition: all 0.3s;
+    }
+</style>
+
+<script>
+    document.getElementById('reportForm').addEventListener('submit', function() {
+        const btn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const btnLoader = document.getElementById('btnLoader');
+
+        // Nonaktifkan tombol agar tidak diklik dua kali
+        btn.disabled = true;
+        
+        // Sembunyikan teks/ikon asli
+        btnText.classList.add('d-none');
+        
+        // Tampilkan spinner dan teks loading
+        btnLoader.classList.remove('d-none');
+        
+        // Tambahkan transparansi sedikit sesuai panduan
+        btn.style.opacity = '0.8';
+    });
+</script>
+{% endblock %}

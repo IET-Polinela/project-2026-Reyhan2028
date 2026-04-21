@@ -1,102 +1,56 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Hubungi Kami - Smart City</title>
-    <style>
-        /* Menggunakan gaya yang konsisten dengan halaman utama */
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            text-align: center; 
-            margin-top: 50px; 
-            background-color: #f0f2f5; 
-        }
-        .card { 
-            background: white; 
-            padding: 40px; 
-            display: inline-block; 
-            border-radius: 15px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-            width: 450px; 
-            text-align: center;
-        }
-        h1 { color: #1a73e8; margin-bottom: 20px; }
-        
-        .contact-info {
-            text-align: left;
-            margin: 25px 0;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 10px;
-        }
-        .contact-item {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-        .icon {
-            font-size: 20px;
-            margin-right: 15px;
-            width: 30px;
-            text-align: center;
-        }
-        .label {
-            font-weight: bold;
-            color: #5f6368;
-            display: block;
-            font-size: 0.9em;
-        }
-        .value {
-            color: #202124;
-            font-size: 1em;
-        }
+{% extends 'base.html' %}
 
-        .back-link { 
-            display: inline-block; 
-            margin-top: 10px; 
-            text-decoration: none; 
-            color: white; 
-            background-color: #1a73e8;
-            padding: 10px 25px; 
-            border-radius: 5px; 
-            transition: background 0.3s;
-            font-weight: bold;
-        }
-        .back-link:hover { 
-            background-color: #1557b0; 
-        }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h1>Hubungi Kami</h1>
-        <p style="color: #5f6368;">Jika Anda memiliki pertanyaan mengenai sistem pelaporan Smart City, silakan hubungi kontak di bawah ini.</p>
-        
-        <div class="contact-info">
-            <div class="contact-item">
-                <div class="icon">📧</div>
-                <div>
-                    <span class="label">Email</span>
-                    <span class="value">Reyhanganteng@student.polinela.ac.id</span>
+{% block title %}Hubungi Kami - Smart City{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb bg-transparent p-0">
+        <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-primary">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Hubungi Kami</li>
+    </ol>
+</nav>
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm border-0 rounded-3 p-4">
+            <div class="card-body text-center">
+                <h2 class="fw-bold text-primary mb-3">Hubungi Kami</h2>
+                <p class="text-muted mb-4">Jika Anda memiliki pertanyaan mengenai sistem pelaporan Smart City, silakan hubungi kontak di bawah ini.</p>
+                
+                <div class="text-start bg-light p-3 rounded-3 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="fs-3 text-primary me-3">
+                            <i class="bi bi-envelope-fill"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block">Email</small>
+                            <span class="fw-bold">Reyhan@student.polinela.ac.id</span>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="fs-3 text-danger me-3">
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block">Lokasi</small>
+                            <span class="fw-bold">Bandar Lampung, Indonesia</span>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center">
+                        <div class="fs-3 text-warning me-3">
+                            <i class="bi bi-building"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block">Institusi</small>
+                            <span class="fw-bold">Politeknik Negeri Lampung</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="contact-item">
-                <div class="icon">📍</div>
-                <div>
-                    <span class="label">Lokasi</span>
-                    <span class="value">Bandar Lampung, Indonesia</span>
-                </div>
-            </div>
-            <div class="contact-item">
-                <div class="icon">🏛️</div>
-                <div>
-                    <span class="label">Institusi</span>
-                    <span class="value">Politeknik Negeri Lampung</span>
                 </div>
             </div>
         </div>
-
-        <a href="{% url 'home' %}" class="back-link">← Kembali ke Beranda</a>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

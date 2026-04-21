@@ -1,61 +1,35 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Tentang Saya - Smart City</title>
-    <style>
-        /* Mengambil gaya dari home agar konsisten */
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            text-align: center; 
-            margin-top: 50px; 
-            background-color: #f0f2f5; 
-        }
-        .card { 
-            background: white; 
-            padding: 40px; 
-            display: inline-block; 
-            border-radius: 15px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-            width: 500px; 
-            text-align: center;
-        }
-        h1 { color: #1a73e8; margin-bottom: 20px; }
-        p { color: #5f6368; line-height: 1.6; font-size: 1.1em; }
-        strong { color: #202124; }
-        
-        .back-link { 
-            display: inline-block; 
-            margin-top: 25px; 
-            text-decoration: none; 
-            color: white; 
-            background-color: #1a73e8;
-            padding: 10px 20px; 
-            border-radius: 5px; 
-            transition: background 0.3s;
-            font-weight: bold;
-        }
-        .back-link:hover { 
-            background-color: #1557b0; 
-        }
+{% extends 'base.html' %}
 
-        /* Dekorasi tambahan supaya tidak sepi */
-        .profile-icon {
-            font-size: 50px;
-            margin-bottom: 10px;
-        }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <div class="profile-icon">👤</div>
-        <h1>Tentang Saya</h1>
-        <hr style="border: 0; border-top: 1px solid #eee; margin-bottom: 25px;">
-        
-        <p>Halo! Nama saya <strong>Reyhan Aditya</strong>.</p>
-        <p>Saya adalah mahasiswa di <strong>Politeknik Negeri Lampung</strong> yang sedang menempuh mata kuliah Pemrograman Internet.</p>
-       
-        <a href="{% url 'home' %}" class="back-link">← Kembali ke Beranda</a>
+{% block title %}Tentang Saya - Smart City{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb bg-transparent p-0">
+        <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-primary">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Tentang Saya</li>
+    </ol>
+</nav>
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm border-0 rounded-3 text-center p-4 p-md-5">
+            <div class="card-body">
+                <div class="mb-4 text-primary">
+                    <i class="bi bi-person-circle display-1"></i>
+                </div>
+                
+                <h2 class="fw-bold text-primary mb-3">Tentang Saya</h2>
+                <hr class="mb-4 opacity-25">
+                
+                <p class="text-muted fs-5">
+                    Halo! Nama saya <strong class="text-dark">Reyhan Aditya</strong>.
+                </p>
+                <p class="text-muted">
+                    Saya adalah mahasiswa di <strong class="text-dark">Politeknik Negeri Lampung</strong> yang sedang menempuh mata kuliah Pemrograman Internet.
+                </p>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

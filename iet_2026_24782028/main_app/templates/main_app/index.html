@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Selamat Datang - Smart City{% endblock %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3 shadow-sm border">
+    <div class="container-fluid py-5 text-center">
+        <h1 class="display-5 fw-bold text-primary">Halo, Everyone!</h1>
+        <p class="col-md-12 fs-4">Selamat datang di sistem Smart City Bandar Lampung.</p>
+        <hr class="my-4">
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a href="{% url 'home' %}" class="btn btn-primary btn-lg px-4 gap-3">Lihat Semua Laporan</a>
+            <a href="{% url 'add_report' %}" class="btn btn-outline-secondary btn-lg px-4">Buat Laporan Baru</a>
+        </div>
+    </div>
+</div>
+
+<div class="row text-center mt-5">
+    <div class="col-md-4">
+        <div class="p-3">
+            <i class="bi bi-megaphone display-4 text-warning"></i>
+            <h4 class="mt-3">Laporkan</h4>
+            <p>Laporkan kerusakan fasilitas umum di sekitarmu.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="p-3">
+            <i class="bi bi-gear-wide-connected display-4 text-info"></i>
+            <h4 class="mt-3">Proses</h4>
+            <p>Petugas akan segera memverifikasi dan memperbaiki.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="p-3">
+            <i class="bi bi-check-all display-4 text-success"></i>
+            <h4 class="mt-3">Selesai</h4>
+            <p>Kota menjadi lebih nyaman untuk ditinggali.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
