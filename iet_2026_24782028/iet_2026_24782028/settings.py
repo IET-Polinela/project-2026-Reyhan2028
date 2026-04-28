@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'about',
     'main_app',
     'contacts',
+    'usermanagement_2028',
 ]
 
 MIDDLEWARE = [
@@ -78,7 +79,7 @@ WSGI_APPLICATION = 'iet_2026_24782028.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'smartcity_db',
+        'NAME': 'smartcity_db_new',
         'USER': 'root',
         'PASSWORD': '', # Kosongkan jika default XAMPP
         'HOST': '127.0.0.1',
@@ -122,3 +123,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+AUTH_USER_MODEL = 'usermanagement_2028.User'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = 'login'
