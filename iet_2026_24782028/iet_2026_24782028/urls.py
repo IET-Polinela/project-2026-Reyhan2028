@@ -16,11 +16,12 @@ urlpatterns = [
     # 3. Jalur untuk App Contacts
     path('contacts/', include('contacts.urls')), 
 
+    # 4. JALUR UNTUK APP DASHBOARD (Update Lab 7)
+    path('dashboard/', include('dashboard_2028.urls')), # <--- Tambahkan ini!
+
     # --- UPDATE UNTUK LAB 6 (Authentication dengan Feedback) ---
     
-    # Login: Menggunakan UserLoginView kustom agar pesan sukses muncul
     path('login/', user_views.UserLoginView.as_view(), name='login'),
     
-    # Logout: Menggunakan UserLogoutView kustom agar pesan logout muncul
     path('logout/', user_views.UserLogoutView.as_view(next_page='login'), name='logout'),
 ]

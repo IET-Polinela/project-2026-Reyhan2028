@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Statistik - Smart City{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header Halaman -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-primary mb-1">Dashboard Statistik</h2>
+            <p class="text-muted">Pantau data laporan infrastruktur Kota Bandar Lampung secara real-time.</p>
+        </div>
+        <div class="text-end d-none d-md-block">
+            <span class="badge bg-white text-primary border border-primary px-3 py-2 rounded-pill shadow-sm">
+                <i class="bi bi-calendar3 me-2"></i>{% now "d F Y" %}
+            </span>
+        </div>
+    </div>
+
+    <!-- Grafik Section -->
+    <div class="row g-4 mb-5">
+        <!-- Grafik Distribusi Status (Doughnut Chart) -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3 border-0">
+                    <h5 class="mb-0 fw-bold text-dark text-center">Distribusi Status Laporan</h5>
+                </div>
+                <div class="card-body d-flex align-items-center justify-content-center p-4">
+                    <div style="width: 100%; max-width: 350px;">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grafik Distribusi Kategori (Bar Chart) -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3 border-0">
+                    <h5 class="mb-0 fw-bold text-dark text-center">Jumlah Laporan per Kategori</h5>
+                </div>
+                <div class="card-body p-4">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tables Section -->
+    <div class="row g-4">
+        <!-- Tabel Laporan Terbaru -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm overflow-hidden">
+                <div class="card-header bg-primary py-3 border-0">
+                    <h5 class="mb-0 fw-bold text-white"><i class="bi bi-megaphone me-2"></i>5 Laporan Teranyar</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="px-3">Judul</th>
+                                <th>Kategori</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentTable" class="border-top-0">
+                            <!-- Data dari Fetch API -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabel Laporan Selesai -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm overflow-hidden">
+                <div class="card-header bg-success py-3 border-0">
+                    <h5 class="mb-0 fw-bold text-white"><i class="bi bi-check2-circle me-2"></i>5 Laporan Selesai</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="px-3">Judul</th>
+                                <th>Kategori</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resolvedTable" class="border-top-0">
+                            <!-- Data dari Fetch API -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    fetch('/dashboard/api/stats/')
+        .then(response => response.json())
+        .then(data => {
+            // 1. Chart Status
+            new Chart(document.getElementById('statusChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: data.status_data.map(i => i.status),
+                    datasets: [{
+                        data: data.status_data.map(i => i.total),
+                        backgroundColor: ['#f39c12', '#0d6efd', '#6f42c1', '#198754'],
+                        borderWidth: 2,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // 2. Chart Kategori
+            new Chart(document.getElementById('categoryChart'), {
+                type: 'bar',
+                data: {
+                    labels: data.category_data.map(i => i.category),
+                    datasets: [{
+                        label: 'Jumlah Laporan',
+                        data: data.category_data.map(i => i.total),
+                        backgroundColor: '#0d6efd',
+                        borderRadius: 6
+                    }]
+                },
+                options: { 
+                    scales: { 
+                        y: { beginAtZero: true, grid: { display: false } },
+                        x: { grid: { display: false } }
+                    } 
+                }
+            });
+
+            // 3. Update Tabel Terbaru
+            const recentTbody = document.getElementById('recentTable');
+            data.recent_reports.forEach(report => {
+                recentTbody.innerHTML += `
+                    <tr>
+                        <td class="px-3 fw-medium">${report.title}</td>
+                        <td><span class="badge bg-light text-dark border">${report.category}</span></td>
+                    </tr>`;
+            });
+
+            // 4. Update Tabel Selesai
+            const resolvedTbody = document.getElementById('resolvedTable');
+            data.resolved_reports.forEach(report => {
+                resolvedTbody.innerHTML += `
+                    <tr>
+                        <td class="px-3 fw-medium">${report.title}</td>
+                        <td><span class="badge bg-light text-dark border">${report.category}</span></td>
+                    </tr>`;
+            });
+        })
+        .catch(error => console.error('Error fetching dashboard data:', error));
+</script>
+{% endblock %}

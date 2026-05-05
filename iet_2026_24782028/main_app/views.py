@@ -4,9 +4,11 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.views import View
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-# Tambahkan import untuk proteksi login
 from django.contrib.auth.mixins import LoginRequiredMixin 
 from .models import Report
+
+# --- IMPORT UNTUK LAB 7 ---
+from django.http import JsonResponse
 
 # 1. Dashboard / Halaman Utama
 class IndexView(View):
@@ -93,3 +95,41 @@ class ReportUpdateStatusView(LoginRequiredMixin, View):
         
         messages.success(request, f"Status '{report.title}' kini: {report.get_status_display()}!")
         return redirect('home')
+
+# --- OPTIMASI LAB SESSION 7 ---
+
+# 8. Fungsi untuk Live Search (DIPERBAIKI AGAR RINGAN)
+def report_search(request):
+    query = request.GET.get('q', '')
+    
+    # Jangan cari jika kurang dari 2 huruf
+    if len(query) < 2:
+        return JsonResponse({'reports': []})
+    
+    # Ambil kolom penting saja & batasi 10 hasil agar tidak lag
+    reports = Report.objects.filter(
+        title__icontains=query
+    ).only('id', 'title', 'category', 'location', 'status')[:10]
+    
+    results = []
+    for r in reports:
+        results.append({
+            'id': r.pk,
+            'title': r.title,
+            'category': r.category,
+            'location': r.location,
+            'status': r.get_status_display(),
+        })
+    return JsonResponse({'reports': results})
+
+# 9. Fungsi untuk Detail Modal via AJAX
+def report_detail_api(request, pk): 
+    report = get_object_or_404(Report, pk=pk)
+    data = {
+        'title': report.title,
+        'category': report.category,
+        'description': report.description,
+        'location': report.location,
+        'status': report.get_status_display(),
+    }
+    return JsonResponse(data)

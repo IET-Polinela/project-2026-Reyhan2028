@@ -22,13 +22,11 @@
         }
         .main-container { flex: 1; }
         
-        /* Animasi Alert */
         .alert {
             border: none;
             border-radius: 12px;
         }
         
-        /* Footer Style */
         footer {
             background-color: #ffffff;
             border-top: 1px solid #e3e6f0;
@@ -48,8 +46,16 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link px-3 {% if request.resolver_match.url_name == 'index' %}active fw-bold{% endif %}" href="{% url 'index' %}">Home</a>
+                        <a class="nav-link px-3 {% if request.resolver_match.url_name == 'index' and not request.resolver_match.app_name %}active fw-bold{% endif %}" href="{% url 'index' %}">Home</a>
                     </li>
+
+                    <!-- DASHBOARD: Muncul hanya jika sudah login dan menggunakan namespace dashboard -->
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {% if request.resolver_match.app_name == 'dashboard' %}active fw-bold{% endif %}" href="{% url 'dashboard:index' %}">Dashboard</a>
+                    </li>
+                    {% endif %}
+
                     <li class="nav-item">
                         <a class="nav-link px-3 {% if request.resolver_match.url_name == 'home' %}active fw-bold{% endif %}" href="{% url 'home' %}">Reports</a>
                     </li>
@@ -66,6 +72,8 @@
                                 <i class="bi bi-person-circle me-1"></i>{{ user.username }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                <li><a class="dropdown-item" href="{% url 'dashboard:index' %}"><i class="bi bi-speedometer2 me-2"></i>Dashboard Saya</a></li>
+                                <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form action="{% url 'logout' %}" method="post" class="px-3 py-1">
                                         {% csrf_token %}

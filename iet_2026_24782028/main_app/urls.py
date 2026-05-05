@@ -14,4 +14,8 @@ urlpatterns = [
     path('update/<int:pk>/', views.ReportUpdateView.as_view(), name='update_report'),
     path('delete/<int:pk>/', views.ReportDeleteView.as_view(), name='delete_report'),
     path('update-status/<int:pk>/', views.ReportUpdateStatusView.as_view(), name='update_status'),
+
+    # --- TAMBAHKAN INI UNTUK LAB 7 ---
+    path('search-api/', views.report_search, name='report_search'),
+    path('detail-api/<int:pk>/', views.report_detail_api, name='report_detail_api'),
 ]
