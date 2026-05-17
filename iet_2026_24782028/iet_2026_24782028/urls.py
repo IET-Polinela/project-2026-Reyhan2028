@@ -7,6 +7,10 @@ urlpatterns = [
 
     path('register/', user_views.register, name='register'),
     
+    # --- UPDATE UNTUK LAB 9 (REST API) ---
+    # Path dasar api/ untuk mengakses endpoint reports
+    path('api/', include('main_app.api_urls')), 
+    
     # 1. Jalur untuk Main App (Halaman Utama)
     path('', include('main_app.urls')), 
     
@@ -17,10 +21,9 @@ urlpatterns = [
     path('contacts/', include('contacts.urls')), 
 
     # 4. JALUR UNTUK APP DASHBOARD (Update Lab 7)
-    path('dashboard/', include('dashboard_2028.urls')), # <--- Tambahkan ini!
+    path('dashboard/', include('dashboard_2028.urls')),
 
     # --- UPDATE UNTUK LAB 6 (Authentication dengan Feedback) ---
-    
     path('login/', user_views.UserLoginView.as_view(), name='login'),
     
     path('logout/', user_views.UserLogoutView.as_view(next_page='login'), name='logout'),

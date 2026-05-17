@@ -37,6 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # Plugin Pihak Ketiga (Tambahkan di sini)
+    'rest_framework',
+    
+    # Aplikasi Milik Reyhan Aditya (24782028)
     'about',
     'main_app',
     'contacts',
