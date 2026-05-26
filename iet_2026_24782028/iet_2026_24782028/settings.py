@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     
     # Plugin Pihak Ketiga (Tambahkan di sini)
     'rest_framework',
+    'rest_framework_simplejwt',
     
     # Aplikasi Milik Reyhan Aditya (24782028)
     'about',
@@ -133,3 +134,17 @@ AUTH_USER_MODEL = 'usermanagement_2028.User'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = 'login'
+
+# =====================================================================
+# --- KODE TAMBAHAN UNTUK LAB SESSION 10 (JWT AUTHENTICATION) ---
+# =====================================================================
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+}

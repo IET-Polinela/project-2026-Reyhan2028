@@ -2,6 +2,12 @@ from django.contrib import admin
 from django.urls import path, include
 from usermanagement_2028 import views as user_views
 
+# --- TAMBAHAN BARU UNTUK LAB 10 (Hanya menambah impor ini) ---
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+# --- UPDATE LAB 10: TAMBAHKAN IMPOR INI (Untuk Register API) ---
+from usermanagement_2028.api_views import RegisterView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
@@ -10,6 +16,16 @@ urlpatterns = [
     # --- UPDATE UNTUK LAB 9 (REST API) ---
     # Path dasar api/ untuk mengakses endpoint reports
     path('api/', include('main_app.api_urls')), 
+    
+    # --- TAMBAHAN BARU LAB 10 (Agar Tombol Login & Form POST Muncul di Browser) ---
+    path('api-auth/', include('rest_framework.urls')),
+    
+    # --- TAMBAHAN BARU UNTUK LAB 10 ---
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
+    # --- UPDATE LAB 10: TAMBAHKAN BARIS INI (Endpoint Register API Baru) ---
+    path('api/register/', RegisterView.as_view(), name='api_register'),
     
     # 1. Jalur untuk Main App (Halaman Utama)
     path('', include('main_app.urls')), 
