@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # Plugin Pihak Ketiga (Tambahkan di sini)
     'rest_framework',
     'rest_framework_simplejwt',
+    'corsheaders',  # <--- TAMBAHAN BARU LAB 11 (CORS)
     
     # Aplikasi Milik Reyhan Aditya (24782028)
     'about',
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # <--- TAMBAHAN BARU LAB 11 (Wajib diletakkan di paling atas)
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -148,3 +150,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ),
 }
+
+# =====================================================================
+# --- KODE TAMBAHAN UNTUK LAB SESSION 11 (CORS SETTINGS) ---
+# =====================================================================
+CORS_ALLOW_ALL_ORIGINS = True  # Mengizinkan frontend eksternal mengakses API
