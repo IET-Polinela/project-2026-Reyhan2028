@@ -20,13 +20,18 @@ class ReportListView(ListView):
     model = Report
     template_name = 'main_app/home.html'
     context_object_name = 'reports'
-    ordering = ['-created_at']
+
+    def get_queryset(self):
+        return Report.objects.exclude(status='DRAFT').order_by('-created_at')
 
 # 3. Detail Satu Laporan (Akses: Semua User)
 class ReportDetailView(DetailView):
     model = Report
     template_name = 'main_app/report_detail.html'
     context_object_name = 'report'
+
+    def get_queryset(self):
+        return Report.objects.exclude(status='DRAFT')
 
 # 4. Tambah Laporan Baru (Akses: Hanya Admin)
 class ReportCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -40,10 +45,8 @@ class ReportCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         if not request.user.is_authenticated:
             messages.warning(request, "Silakan login terlebih dahulu.")
             return redirect('login')
-        if not request.user.is_admin:
-            messages.error(request, "Akses Ditolak! Hanya Admin yang boleh menambah laporan.")
-            return redirect('home')
-        return super().dispatch(request, *args, **kwargs)
+        messages.error(request, "Admin hanya dapat melihat dan memverifikasi laporan warga.")
+        return redirect('home')
 
 # 5. Edit Laporan (Akses: Hanya Admin)
 class ReportUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -57,10 +60,8 @@ class ReportUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         if not request.user.is_authenticated:
             messages.warning(request, "Silakan login terlebih dahulu.")
             return redirect('login')
-        if not request.user.is_admin:
-            messages.error(request, "Akses Ditolak! Anda tidak memiliki izin mengedit data.")
-            return redirect('home')
-        return super().dispatch(request, *args, **kwargs)
+        messages.error(request, "Laporan warga tidak boleh diedit melalui halaman admin.")
+        return redirect('home')
 
 # 6. Hapus Laporan (Akses: Hanya Admin)
 class ReportDeleteView(LoginRequiredMixin, DeleteView):
@@ -72,10 +73,8 @@ class ReportDeleteView(LoginRequiredMixin, DeleteView):
         if not request.user.is_authenticated:
             messages.warning(request, "Silakan login terlebih dahulu.")
             return redirect('login')
-        if not request.user.is_admin:
-            messages.error(request, "Akses Ditolak! Hanya Admin yang bisa menghapus laporan.")
-            return redirect('home')
-        return super().dispatch(request, *args, **kwargs)
+        messages.error(request, "Laporan warga tidak boleh dihapus melalui halaman admin.")
+        return redirect('home')
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, "Laporan telah berhasil dihapus.")
@@ -88,7 +87,7 @@ class ReportUpdateStatusView(LoginRequiredMixin, View):
             messages.error(request, "Hanya Admin yang dapat mengubah status laporan.")
             return redirect('home')
             
-        report = get_object_or_404(Report, pk=pk)
+        report = get_object_or_404(Report.objects.exclude(status='DRAFT'), pk=pk)
         new_status = request.POST.get('status')
         report.status = new_status
         report.save()
@@ -107,7 +106,7 @@ def report_search(request):
         return JsonResponse({'reports': []})
     
     # Ambil kolom penting saja & batasi 10 hasil agar tidak lag
-    reports = Report.objects.filter(
+    reports = Report.objects.exclude(status='DRAFT').filter(
         title__icontains=query
     ).only('id', 'title', 'category', 'location', 'status')[:10]
     
@@ -124,7 +123,7 @@ def report_search(request):
 
 # 9. Fungsi untuk Detail Modal via AJAX
 def report_detail_api(request, pk): 
-    report = get_object_or_404(Report, pk=pk)
+    report = get_object_or_404(Report.objects.exclude(status='DRAFT'), pk=pk)
     data = {
         'title': report.title,
         'category': report.category,

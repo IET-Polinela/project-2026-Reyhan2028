@@ -23,11 +23,6 @@
         </div>
     </div>
 
-    {% if user.is_admin %}
-    <a href="{% url 'add_report' %}" class="btn btn-success shadow-sm px-4 rounded-pill">
-        <i class="bi bi-plus-circle me-2"></i>Buat Laporan Baru
-    </a>
-    {% endif %}
 </div>
 
 <div class="card shadow-sm border-0 rounded-3">
@@ -86,10 +81,6 @@
                         <td class="text-center pe-4">
                             <div class="d-flex justify-content-center gap-1">
                                 <button class="btn btn-sm btn-outline-info view-detail" data-id="{{ report.pk }}"><i class="bi bi-eye"></i></button>
-                                {% if user.is_admin %}
-                                <a href="{% url 'update_report' report.pk %}" class="btn btn-sm btn-info text-white shadow-sm">Edit</a>
-                                <a href="{% url 'delete_report' report.pk %}" class="btn btn-sm btn-danger shadow-sm">Hapus</a>
-                                {% endif %}
                             </div>
                         </td>
                     </tr>
@@ -190,15 +181,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                 }
                             }
 
-                            // Tombol Edit Delete
-                            let adminButtons = '';
-                            if (isAdmin) {
-                                adminButtons = `
-                                    <a href="/update-report/${report.id}/" class="btn btn-sm btn-info text-white">Edit</a>
-                                    <a href="/delete-report/${report.id}/" class="btn btn-sm btn-danger">Hapus</a>
-                                `;
-                            }
-
                             rows += `
                                 <tr>
                                     <td class="ps-4">
@@ -213,7 +195,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <td class="text-center pe-4">
                                         <div class="d-flex justify-content-center gap-1">
                                             <button class="btn btn-sm btn-outline-info view-detail" data-id="${report.id}"><i class="bi bi-eye"></i></button>
-                                            ${adminButtons}
                                         </div>
                                     </td>
                                 </tr>`;
