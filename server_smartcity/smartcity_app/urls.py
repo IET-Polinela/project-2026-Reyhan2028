@@ -8,8 +8,22 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 # --- UPDATE LAB 10: TAMBAHKAN IMPOR INI (Untuk Register API) ---
 from usermanagement_2028.api_views import RegisterView
 
+# --- TAMBAHAN BARU UNTUK LAB 14 (OpenAPI Documentation) ---
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from django_scalar.views import scalar_viewer
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # --- TAMBAHAN BARU UNTUK LAB 14 (OpenAPI Documentation) ---
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path(
+        'api/docs/scalar/',
+        scalar_viewer,
+        {'openapi_url': '/api/schema/', 'title': 'Smart City Portal API'},
+        name='scalar',
+    ),
 
     path('register/', user_views.register, name='register'),
     

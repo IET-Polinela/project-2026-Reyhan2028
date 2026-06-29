@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     # Plugin Pihak Ketiga (Tambahkan di sini)
     'rest_framework',
     'rest_framework_simplejwt',
+    'drf_spectacular',
+    'django_scalar',
     'corsheaders',  # <--- TAMBAHAN BARU LAB 11 (CORS)
     
     # Aplikasi Milik Reyhan Aditya (24782028)
@@ -156,10 +158,19 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
     ),
+}
+
+# =====================================================================
+# --- KODE TAMBAHAN UNTUK LAB SESSION 14 (OPENAPI DOCUMENTATION) ---
+# =====================================================================
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Smart City Portal API',
+    'DESCRIPTION': 'Dokumentasi OpenAPI untuk layanan laporan warga pada Smart City Portal.',
+    'VERSION': '1.0.0',
 }
 
 # =====================================================================
