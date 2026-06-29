@@ -10,11 +10,25 @@
             <div class="card-body p-4">
                 <form method="post">
                     {% csrf_token %}
+
+                    {% if form.non_field_errors or form.errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
                     <div class="mb-3">
                         <label class="form-label fw-bold">Username</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-person"></i></span>
-                            <input type="text" name="username" class="form-control" placeholder="Masukkan username" required>
+                            <input type="text" name="username" value="{{ form.username.value|default:'' }}" class="form-control" placeholder="Masukkan username" required>
                         </div>
                     </div>
                     <div class="mb-4">
